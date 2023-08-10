@@ -11,10 +11,11 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/armon/go-socks5"
+	"github.com/movna/go-socks5"
+
+	"net/netip"
 
 	"golang.zx2c4.com/wireguard/tun/netstack"
-	"net/netip"
 )
 
 // errorLogger is the logger to print error message
@@ -121,7 +122,7 @@ func (d VirtualTun) resolveToAddrPort(endpoint *addressPort) (*netip.AddrPort, e
 
 // SpawnRoutine spawns a socks5 server.
 func (config *Socks5Config) SpawnRoutine(vt *VirtualTun) {
-	conf := &socks5.Config{Dial: vt.Tnet.DialContext, Resolver: vt}
+	conf := &socks5.Config{Dial: vt.Tnet.DialContext, Resolver: vt, Socks4Support: true}
 	if username := config.Username; username != "" {
 		validator := CredentialValidator{username: username}
 		validator.password = config.Password
